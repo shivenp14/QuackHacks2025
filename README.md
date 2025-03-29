@@ -11,3 +11,14 @@ career_insights_backend/
 ├── visualization.py
 └── requirements.txt
 ```
+
+## How to Run
+
+- Create Virtual Environment
+``` python -m venv env ```
+  - Activate in Windows
+  ``` env\Scripts\activate ```
+  - Activate in Mac
+  ``` source env/bin/activate ```
+- Download requirements
+``` pip install -r requirements.txt ```
