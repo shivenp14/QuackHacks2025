@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, File, Query, UploadFile
 from gemini import gemini
 from dependencies import get_gemini_api_key
 
@@ -24,5 +24,19 @@ def gemini_response(
     """
     # Call the function that interacts with the Gemini API.
     result = gemini.gemini_response(input, api_key)
+    
+    return result
+
+@router.post("/multimodal")
+def gemini_multimodal_response(
+    text: str = Query(...),
+    file: UploadFile = File(None),
+    api_key: str = Depends(get_gemini_api_key)
+    ):
+    """
+    Endpoint to get a multimodal response from Gemini API based on user input and an optional file.
+    """
+    # Call the function that interacts with the Gemini API.
+    result = gemini.gemini_multimodal_response(api_key, text, file)
     
     return result
