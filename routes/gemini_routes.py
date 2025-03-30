@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, Query
-from gemini import gemini
+from fastapi import APIRouter, Depends, File, Query, UploadFile
+from gemini import gemini, conversation_history
 from dependencies import get_gemini_api_key
 
 router = APIRouter()
@@ -26,3 +26,27 @@ def gemini_response(
     result = gemini.gemini_response(input, api_key)
     
     return result
+
+@router.post("/multimodal")
+def gemini_multimodal_response(
+    text: str = Query(...),
+    file: UploadFile = File(None),
+    api_key: str = Depends(get_gemini_api_key)
+    ):
+    """
+    Endpoint to get a multimodal response from Gemini API based on user input and an optional file.
+    """
+    # Call the function that interacts with the Gemini API.
+    result = gemini.gemini_multimodal_response(api_key, text, file)
+    
+    return result
+
+@router.get("/history")
+def get_history():
+    """
+    Endpoint to retrieve the conversation history.
+    """
+    # Call the function that retrieves the conversation history.
+    history = conversation_history.get_history()
+    
+    return {"history": history}
