@@ -1,4 +1,3 @@
-import imp
 from fastapi import APIRouter, Depends
 from indeed_scraper.indeed_scraper import start_indeed_scraper
 from dependencies import get_indeed_api_key
