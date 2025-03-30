@@ -5,21 +5,25 @@
 ## Project Structure
 
 ```
-QUACKHACKS2025/
+QuackHacks2025/
 ├── app.py
-├── routers/
+├── .env
+├── .gitignore
+├── README.md
+├── requirements.txt
+├── dependencies.py
+├── gemini/
 │   ├── __init__.py
-│   └── indeed_router.py
-├── scrapers/
+│   ├── gemini.py
+│   └── prompt.txt
+├── indeed_scraper/
 │   ├── __init__.py
 │   └── indeed_scraper.py
-├── dependencies/
+├── routes/
 │   ├── __init__.py
-│   └── indeed_dependencies.py
-├── gemini_ai/
-│   ├── __init__.py
-│   └── gemini_ai.py
-└── requirements.txt
+│   ├── routers.py
+│   ├── gemini_routes.py
+│   └── indeed_scraper_routes.py
 ```
 
 ## How to Run
