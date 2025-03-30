@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, File, Query, UploadFile
-from gemini import gemini
+from gemini import gemini, conversation_history
 from dependencies import get_gemini_api_key
 
 router = APIRouter()
@@ -40,3 +40,13 @@ def gemini_multimodal_response(
     result = gemini.gemini_multimodal_response(api_key, text, file)
     
     return result
+
+@router.get("/history")
+def get_history():
+    """
+    Endpoint to retrieve the conversation history.
+    """
+    # Call the function that retrieves the conversation history.
+    history = conversation_history.get_history()
+    
+    return {"history": history}

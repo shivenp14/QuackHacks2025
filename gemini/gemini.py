@@ -128,7 +128,7 @@ def gemini_multimodal_response(api_key: str, text: str, uploaded_file: UploadFil
     
     if has_file and file_data:
         conversation_history.add_message("user_file", file_data)
-    conversation_history.add_message("user", input)
+    conversation_history.add_message("user", text)
     conversation_history.add_message("assistant", output)
     conversation_history.save_history()
 
