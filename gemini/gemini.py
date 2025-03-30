@@ -1,9 +1,27 @@
 import base64
+from typing import Optional
 from fastapi import UploadFile
+from pydantic import BaseModel
 import requests
 import json
 from . import conversation_history, file
 import json
+
+class Listing(BaseModel):
+    """
+    Model for the listing data.
+    """
+    positionName: str
+    postedAt: Optional[str] = None
+    company: Optional[str] = None
+    location: Optional[str] = None
+    description: Optional[str] = None
+
+class LikedListings(BaseModel):
+    """
+    Model for the liked listings data.
+    """
+    liked_listings: list[Listing]
 
 def is_json_serializable(obj):
     try:
@@ -12,12 +30,12 @@ def is_json_serializable(obj):
     except TypeError:
         return False
 
-def gemini_setup(api_key: str):
+def gemini_setup(request: LikedListings, api_key: str):
     # Gemini 2.0 Flash REST endpoint. The endpoint URL uses the API key as a query parameter.
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
 
     prompt = open("gemini/prompt.txt", "r").read()
-
+    request_json = request.model_dump_json()
     # Create the JSON payload. Here we provide a single-turn query.
     payload = {
         "contents": [
@@ -25,7 +43,7 @@ def gemini_setup(api_key: str):
                 "role": "user",
                 "parts": [
                     {
-                        "text": prompt
+                        "text": prompt + "\n\n Indeed Job Listings the User Chose :\n" + request_json
                     }
                 ]
             }
@@ -45,7 +63,7 @@ def gemini_setup(api_key: str):
 
     output = result["candidates"][0]["content"]["parts"][0]["text"]
 
-    conversation_history.add_message("user", prompt)
+    conversation_history.add_message("user", prompt + "\n\n Indeed Job Listings the User Chose :\n" + request_json)
     conversation_history.add_message("assistant", output)
     conversation_history.save_history()
 

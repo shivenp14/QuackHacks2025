@@ -1,16 +1,34 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, File, Query, UploadFile
+from pydantic import BaseModel
 from gemini import gemini, conversation_history
 from dependencies import get_gemini_api_key
 
 router = APIRouter()
 
+class Listing(BaseModel):
+    """
+    Model for the listing data.
+    """
+    positionName: str
+    postedAt: Optional[str] = None
+    company: Optional[str] = None
+    location: Optional[str] = None
+    description: Optional[str] = None
+
+class LikedListings(BaseModel):
+    """
+    Model for the liked listings data.
+    """
+    liked_listings: list[Listing]
+
 @router.post("/setup")
-def gemini_setup(api_key: str = Depends(get_gemini_api_key)):
+def gemini_setup(request: LikedListings, api_key: str = Depends(get_gemini_api_key)):
     """
     Endpoint to get a response from Gemini API.
     """
     # Call the function that interacts with the Gemini API.
-    result = gemini.gemini_setup(api_key)
+    result = gemini.gemini_setup(request, api_key)
     
     return result
 
