@@ -10,11 +10,17 @@ class Listing(BaseModel):
     """
     Model for the listing data.
     """
-    positionName: str
+    positionName: Optional[str] = None
     postedAt: Optional[str] = None
     company: Optional[str] = None
     location: Optional[str] = None
     description: Optional[str] = None
+
+class Summarize(BaseModel):
+    """
+    Model for the description data.
+    """
+    content: str
 
 class LikedListings(BaseModel):
     """
@@ -23,12 +29,12 @@ class LikedListings(BaseModel):
     liked_listings: list[Listing]
 
 @router.post("/setup")
-def gemini_setup(request: LikedListings, api_key: str = Depends(get_gemini_api_key)):
+def gemini_setup(request: Optional[LikedListings] = None, api_key: str = Depends(get_gemini_api_key)):
     """
     Endpoint to get a response from Gemini API.
     """
     # Call the function that interacts with the Gemini API.
-    result = gemini.gemini_setup(request, api_key)
+    result = gemini.gemini_setup(api_key, request)
     
     return result
 
@@ -56,6 +62,19 @@ def gemini_multimodal_response(
     """
     # Call the function that interacts with the Gemini API.
     result = gemini.gemini_multimodal_response(api_key, text, file)
+    
+    return result
+
+@router.post("/summarize")
+def gemini_summarize(
+    content: Summarize,
+    api_key: str = Depends(get_gemini_api_key)
+    ):
+    """
+    Endpoint to summarize the provided text using Gemini API.
+    """
+    # Call the function that interacts with the Gemini API.
+    result = gemini.gemini_summarize(content, api_key)
     
     return result
 
