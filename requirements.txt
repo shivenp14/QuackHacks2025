@@ -1,6 +1,7 @@
-fastapi==0.95.2
+fastapi==0.115.12
 uvicorn==0.22.0
 matplotlib==3.7.1
 requests==2.32.3
 pydantic==1.10.7
 apify-client==1.9.2
+uvicorn==0.34.0

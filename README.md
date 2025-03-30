@@ -5,10 +5,20 @@
 ## Project Structure
 
 ```
-career_insights_backend/
+QUACKHACKS2025/
 ├── app.py
-├── model_inference.py
-├── visualization.py
+├── routers/
+│   ├── __init__.py
+│   └── indeed_router.py
+├── scrapers/
+│   ├── __init__.py
+│   └── indeed_scraper.py
+├── dependencies/
+│   ├── __init__.py
+│   └── indeed_dependencies.py
+├── gemini_ai/
+│   ├── __init__.py
+│   └── gemini_ai.py
 └── requirements.txt
 ```
 

@@ -3,10 +3,8 @@ import requests
 import json
 import time
 
-# Replace with your actual API token
-api_token = 'apify_api_o7A5ePAQp9vBQW6cjXmdChXjJrgtTh2VfyTy'
 
-def start_indeed_scraper():
+def start_indeed_scraper(location: str, position: str, api_token: str):
     # The URL for the task trigger (replace with the task you are triggering)
     post_url = 'https://api.apify.com/v2/actor-tasks/raishills~indeed-scraper-task-smm-job/runs'
 
@@ -18,10 +16,10 @@ def start_indeed_scraper():
     # Define the request body (payload)
     body = {
         "followApplyRedirects": False,
-        "location": "New York",
+        "location": location,
         "maxItems": 10,
         "parseCompanyDetails": True,
-        "position": "Software Engineer",
+        "position": position,
         "saveOnlyUniqueItems": True
     }
 
@@ -46,13 +44,13 @@ def start_indeed_scraper():
         # Get the default KeyValueStoreId from the response
         data_set_id = task_data.get('data', {}).get('defaultDatasetId')
 
-        fetch_indeed_scraper(data_set_id)
+        return fetch_indeed_scraper(data_set_id, api_token)
     else:
         print(f"Error triggering task: {response.status_code}")
         
 
 
-def fetch_indeed_scraper(data_set_id):
+def fetch_indeed_scraper(data_set_id, api_token: str):
     if data_set_id:
         print(f"Using Dataset ID: {data_set_id}")
         
@@ -60,7 +58,7 @@ def fetch_indeed_scraper(data_set_id):
         get_url = f'https://api.apify.com/v2/datasets/{data_set_id}/items?token={api_token}'
 
         def check_output():
-            while True:
+            for i in range(0, 10):
                 # Send the GET request to check the output
                 output_response = requests.get(get_url)
 
@@ -71,8 +69,7 @@ def fetch_indeed_scraper(data_set_id):
 
                     if output:
                         print("Output received:")
-                        print(output)  # Print the output data
-                        break  # Exit the loop and end the process
+                        return output  # Print the output data
                     else:
                         print("Output not yet available, checking again in 5 seconds...")
                 else:
@@ -82,9 +79,7 @@ def fetch_indeed_scraper(data_set_id):
                 time.sleep(5)
 
         # Start checking for output
-        check_output()
+        return check_output()
 
     else:
         print("Error: defaultDatasetId not found in the task response.")
-
-start_indeed_scraper()
