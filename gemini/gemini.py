@@ -17,6 +17,12 @@ class Listing(BaseModel):
     location: Optional[str] = None
     description: Optional[str] = None
 
+class Summarize(BaseModel):
+    """
+    Model for the description data.
+    """
+    content: str
+
 class LikedListings(BaseModel):
     """
     Model for the liked listings data.
@@ -152,5 +158,38 @@ def gemini_multimodal_response(api_key: str, text: str, uploaded_file: UploadFil
     conversation_history.add_message("user", text)
     conversation_history.add_message("assistant", output)
     conversation_history.save_history()
+
+    return {"role": "assistant", "content": output}
+
+def gemini_summarize(content: Summarize, api_key: str):
+    # Gemini 2.0 Flash REST endpoint. The endpoint URL uses the API key as a query parameter.
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+
+    text = content.content
+    # Create the JSON payload. Here we provide a single-turn query.
+    payload = {
+        "contents": [
+            {
+                "role": "user",
+                "parts": [
+                    {
+                        "text": "Summarize the following: " + text
+                    }
+                ]
+            }
+        ]
+    }
+
+    # Set the appropriate header.
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    # Make the POST request.
+    response = requests.post(url, headers=headers, json=payload)
+
+    # Print out the response JSON.
+    result = response.json()
+    output = result["candidates"][0]["content"]["parts"][0]["text"]
 
     return {"role": "assistant", "content": output}

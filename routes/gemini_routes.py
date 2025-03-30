@@ -16,6 +16,12 @@ class Listing(BaseModel):
     location: Optional[str] = None
     description: Optional[str] = None
 
+class Summarize(BaseModel):
+    """
+    Model for the description data.
+    """
+    content: str
+
 class LikedListings(BaseModel):
     """
     Model for the liked listings data.
@@ -56,6 +62,19 @@ def gemini_multimodal_response(
     """
     # Call the function that interacts with the Gemini API.
     result = gemini.gemini_multimodal_response(api_key, text, file)
+    
+    return result
+
+@router.post("/summarize")
+def gemini_summarize(
+    content: Summarize,
+    api_key: str = Depends(get_gemini_api_key)
+    ):
+    """
+    Endpoint to summarize the provided text using Gemini API.
+    """
+    # Call the function that interacts with the Gemini API.
+    result = gemini.gemini_summarize(content, api_key)
     
     return result
 
