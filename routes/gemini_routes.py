@@ -10,7 +10,7 @@ class Listing(BaseModel):
     """
     Model for the listing data.
     """
-    positionName: str
+    positionName: Optional[str] = None
     postedAt: Optional[str] = None
     company: Optional[str] = None
     location: Optional[str] = None
@@ -23,12 +23,12 @@ class LikedListings(BaseModel):
     liked_listings: list[Listing]
 
 @router.post("/setup")
-def gemini_setup(request: LikedListings, api_key: str = Depends(get_gemini_api_key)):
+def gemini_setup(request: Optional[LikedListings] = None, api_key: str = Depends(get_gemini_api_key)):
     """
     Endpoint to get a response from Gemini API.
     """
     # Call the function that interacts with the Gemini API.
-    result = gemini.gemini_setup(request, api_key)
+    result = gemini.gemini_setup(api_key, request)
     
     return result
 
