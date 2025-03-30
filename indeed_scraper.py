@@ -17,7 +17,6 @@ def start_indeed_scraper():
 
     # Define the request body (payload)
     body = {
-        "country": "US",
         "followApplyRedirects": False,
         "location": "New York",
         "maxItems": 10,
@@ -46,6 +45,8 @@ def start_indeed_scraper():
         
         # Get the default KeyValueStoreId from the response
         data_set_id = task_data.get('data', {}).get('defaultDatasetId')
+
+        fetch_indeed_scraper(data_set_id)
     else:
         print(f"Error triggering task: {response.status_code}")
         
@@ -85,3 +86,5 @@ def fetch_indeed_scraper(data_set_id):
 
     else:
         print("Error: defaultDatasetId not found in the task response.")
+
+start_indeed_scraper()
