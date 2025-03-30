@@ -46,15 +46,12 @@ def gemini_setup(api_key: str):
     conversation_history.add_message("user", prompt)
     conversation_history.add_message("assistant", output)
     conversation_history.save_history()
-    print(conversation_history.get_history())
 
     return {"role": "assistant", "content": output}
 
 def gemini_response(input:str, api_key:str):
     # Gemini 2.0 Flash REST endpoint. The endpoint URL uses the API key as a query parameter.
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
-    print(is_json_serializable(conversation_history.get_history()))
-    print(conversation_history.get_history())
 
     # Create the JSON payload. Here we provide a single-turn query.
     payload = {
@@ -85,7 +82,5 @@ def gemini_response(input:str, api_key:str):
     conversation_history.add_message("user", input)
     conversation_history.add_message("assistant", output)
     conversation_history.save_history()
-
-    print(conversation_history.get_history())
 
     return {"role": "assistant", "content": output}
